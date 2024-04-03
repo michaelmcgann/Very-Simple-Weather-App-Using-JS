@@ -1,6 +1,8 @@
 import express from "express";
 import axios from "axios";
 import bodyParser from "body-parser";
+import e from "express";
+import e from "express";
 
 const app = express();
 app.set(`view engine`, `ejs`);
@@ -28,14 +30,16 @@ app.post(`/getWeather`, async (req, res) => {
 
 
     } catch (e) {
+        console.log(e);
         res.render(`error`, { error: e });
     }
 
     try {
         const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
         const response = await axios.get(weatherUrl);
-        const weatherDescription = response.data.weather[0].description;
-        const currentTemperatureInK = response.data.main.temp;
+        let data = response.data;
+        const weatherDescription = data.weather[0].description;
+        const currentTemperatureInK = data.main.temp;
         const currentTemperatureInC = (currentTemperatureInK - 273.15).toFixed(2);
 
         const weather = {
@@ -43,10 +47,10 @@ app.post(`/getWeather`, async (req, res) => {
             temp: currentTemperatureInC,
             description: weatherDescription
         };
-
         res.render(`weather`, weather);
 
     } catch (e) {
+        console.log(e);
         res.render(`error`, { error: e });
     }
 
